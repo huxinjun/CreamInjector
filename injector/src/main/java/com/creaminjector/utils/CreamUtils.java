@@ -43,6 +43,10 @@ public class CreamUtils {
         new FragmentPresenter().changeFragment(context, fragments);
     }
 
+    public static void changeFragment(Context context, int enterAnimId, int exitAnimId, IFragmentPresenter.FragmentInfo... fragments) {
+        new FragmentPresenter().changeFragment(context, enterAnimId, exitAnimId, fragments);
+    }
+
     public static void inflate(Context context, Class<? extends LayoutCreater> createrClass, ILayoutPresenter.InflateCallBack callBack) {
         new LayoutPresenter().inflate(context, createrClass, callBack);
     }

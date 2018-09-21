@@ -3,7 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CreamInjector.iml" filepath="$PROJECT_DIR$/CreamInjector.iml" />
-      <module fileurl="file://$PROJECT_DIR$/demo/app.iml" filepath="$PROJECT_DIR$/demo/app.iml" />
+      <module fileurl="file://C:\Users\Administrator\AndroidStudioProjects\opensource\CreamInjector\demo\app.iml" filepath="C:\Users\Administrator\AndroidStudioProjects\opensource\CreamInjector\demo\app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/demo/demo.iml" filepath="$PROJECT_DIR$/demo/demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/injector/injector.iml" filepath="$PROJECT_DIR$/injector/injector.iml" />
     </modules>
   </component>

@@ -82,10 +82,6 @@ public abstract class LayoutCreater<T> {
      * view绑定对象中字段时绑定那个索引的对象字段，配合TAG_MULTI_DATA_COUNT使用
      */
     public static final int TAG_MULTI_DATA_INDEX = TAG_START_INDEX + 0x11;
-    /**
-     * 图片加载需要的参数
-     */
-    public static final int TAG_IMAGE_OPTION = TAG_START_INDEX + 0x12;
 
     /**
      * RecyclerView的adapter使用的定义自条目类型的Class

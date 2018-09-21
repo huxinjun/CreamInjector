@@ -1,6 +1,7 @@
 package com.creaminjector.annotation;
 
 import com.creaminjector.presenter.IInjectionPresenter;
+import com.creaminjector.presenter.impl.annotation.InjectorInterpreter;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -14,6 +15,7 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
+@Interpreter(InjectorInterpreter.class)
 public @interface Injector {
 
 	Class<? extends IInjectionPresenter> value();

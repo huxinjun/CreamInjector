@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.creaminjector.annotation.BindFieldName;
 import com.creaminjector.annotation.creater.BindLayoutCreater;
 import com.creaminjector.annotation.creater.BindView;
+import com.creaminjector.presenter.IInjectionPresenter;
 import com.creaminjector.presenter.impl.layout.LayoutCreater;
 import com.creaminjector.utils.CreamUtils;
 import com.creaminjector.utils.ULog;
@@ -22,6 +23,7 @@ import com.demo.R;
 import com.demo.dialog.LoadingDialog;
 import com.demo.model.Accounts;
 import com.easyjson.EasyJson;
+import com.squareup.picasso.Picasso;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -31,10 +33,19 @@ import okhttp3.Request;
 @BindLayoutCreater(creater = Fragment_1.MyCreater.class)
 public class Fragment_1 extends Fragment {
 
+
+    private View mContainer;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mContainer = CreamUtils.bind(this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return CreamUtils.bind(this);
+        return mContainer;
     }
 
     @BindView(R.layout.fragment_1)
@@ -52,6 +63,7 @@ public class Fragment_1 extends Fragment {
 
         @Override
         public void onInitData() {
+            ULog.out("time.1:"+System.currentTimeMillis());
             OkHttpUtils.get().url("https://xzbenben.cn/AccountBook/account/getAll?TEST").build().execute(new StringCallback() {
 
                 Dialog dialog = new LoadingDialog(getContext());
@@ -63,8 +75,11 @@ public class Fragment_1 extends Fragment {
 
                 @Override
                 public void onResponse(String response, int id) {
+                    ULog.out("time.2:"+System.currentTimeMillis());
                     Accounts javaBean = EasyJson.getJavaBean(response, Accounts.class);
+                    ULog.out("time.3:"+System.currentTimeMillis());
                     setContentData(javaBean);
+                    ULog.out("time.4:"+System.currentTimeMillis());
                 }
 
                 @Override

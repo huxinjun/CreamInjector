@@ -21,31 +21,36 @@ public class FragmentPresenter implements IFragmentPresenter {
 
     @Override
     public void changeFragment(Context context, FragmentInfo... fragments) {
-        ULog.out("切换fragment到：" + fragments[0].clazz.getName());
-        if(!(context instanceof FragmentActivity))
+        changeFragment(context, 0, 0, fragments);
+    }
+
+    @Override
+    public void changeFragment(Context context, int enterAnim, int exitAnim, FragmentInfo... fragments) {
+        ULog.out("切换fragment到：" + fragments[0].mFragment.getClass().getName());
+        if (!(context instanceof FragmentActivity))
             throw new RuntimeException("Activity需要继承自android.support.v4.app.FragmentActivity");
         FragmentActivity activity = (FragmentActivity) context;
         FragmentManager fm = activity.getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
+        if (enterAnim != 0 || exitAnim != 0)
+            ft.setCustomAnimations(enterAnim, exitAnim);
         for (IFragmentPresenter.FragmentInfo info : fragments) {
-            boolean attached = false;
-            @SuppressLint("RestrictedApi") List<Fragment> allFragment = fm.getFragments();
-            if (allFragment != null)
-                for (Fragment fragment : allFragment) {
-                    if (info.clazz == fragment.getClass()) {
-                        attached = true;
-                        ft.attach(fragment);
-                    } else
-                        ft.detach(fragment);
-                }
-            if (!attached) {
-                try {
-                    ft.add(info.viewID, (Fragment) info.clazz.newInstance());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            Fragment fragmentById = fm.findFragmentById(info.viewID);
+            if (info.mFragment != null && info.mFragment.isVisible())
+                continue;
+            if (fragmentById != null) {
+                ft.detach(fragmentById);
+            }
+            if (info.mFragment != null) {
+                ULog.out("FragmentPresenter:frag name=" + info.mFragment.getClass().getSimpleName() + ",hash=" + info.mFragment.hashCode() + ",isAdd=" + info.mFragment.isAdded() + ",isDetached=" + info.mFragment.isDetached());
+                if (info.mFragment.isDetached())
+                    ft.attach(info.mFragment);
+                else
+                    ft.add(info.viewID, info.mFragment);
             }
         }
+
         ft.commitAllowingStateLoss();
+        fm.executePendingTransactions();
     }
 }

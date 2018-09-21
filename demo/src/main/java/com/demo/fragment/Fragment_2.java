@@ -13,16 +13,20 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.creaminjector.annotation.BindFieldName;
 import com.creaminjector.annotation.BindMultiData;
+import com.creaminjector.annotation.Injector;
 import com.creaminjector.annotation.creater.BindItemDefiner;
 import com.creaminjector.annotation.creater.BindLayoutCreater;
 import com.creaminjector.annotation.creater.BindLayoutCreaterHeader;
 import com.creaminjector.annotation.creater.BindLayoutCreaters;
 import com.creaminjector.annotation.creater.BindView;
+import com.creaminjector.presenter.IInjectionPresenter;
 import com.creaminjector.presenter.impl.layout.LayoutCreater;
 import com.creaminjector.templete.SmartRecyclerAdapter;
 import com.creaminjector.utils.CreamUtils;
+import com.creaminjector.utils.ULog;
 import com.demo.R;
 import com.demo.model.Accounts;
 import com.demo.model.Rooms;
@@ -38,10 +42,18 @@ import okhttp3.Call;
 public class Fragment_2 extends Fragment {
 
 
+    private View mContainer;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mContainer = CreamUtils.bind(this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return CreamUtils.bind(this);
+        return mContainer;
     }
 
     @BindView(R.layout.fragment_2)
@@ -80,6 +92,7 @@ public class Fragment_2 extends Fragment {
 
         @Override
         public void onInitData() {
+            ULog.out("time.1:"+System.currentTimeMillis());
             OkHttpUtils.get().url("http://api.mengliaoba.cn/apiv5/live/liveshow.php?cmd=hotroom").build().execute(new StringCallback() {
                 @Override
                 public void onError(Call call, Exception e, int id) {
@@ -88,8 +101,11 @@ public class Fragment_2 extends Fragment {
 
                 @Override
                 public void onResponse(String response, int id) {
+                    ULog.out("time.2:"+System.currentTimeMillis());
                     Rooms javaBean = EasyJson.getJavaBean(response, Rooms.class);
+                    ULog.out("time.3:"+System.currentTimeMillis());
                     setContentData(javaBean);
+                    ULog.out("time.4:"+System.currentTimeMillis());
                 }
             });
         }
