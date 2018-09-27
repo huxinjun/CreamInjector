@@ -4,33 +4,106 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:ignore="HardcodedText">
 
     <FrameLayout
         android:id="@+id/fl_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/ll_bottom"/>
+        android:layout_above="@+id/line"/>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_above="@+id/bottom_bar"
+        android:background="#e5e5e5"/>
+
 
     <LinearLayout
-        android:id="@+id/ll_bottom"
+        android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
 
-        <Button
-            android:id="@+id/btn_1"
+
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/ll_tab1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="切换到Fragment1"/>
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btn_2"
+            <ImageView
+                android:id="@+id/iv_tab1"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/tab_news_select"/>
+
+            <TextView
+                android:id="@+id/tv_tab1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="新闻"
+                android:textColor="@color/colorAccent"
+                android:textSize="12sp"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_tab2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="切换到Fragment2"/>
+            android:gravity="center"
+            android:orientation="vertical"
+            >
+
+            <ImageView
+                android:id="@+id/iv_tab2"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/tab_duanzi"/>
+
+            <TextView
+                android:id="@+id/tv_tab2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="段子"
+                android:textSize="12sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_tab3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_tab3"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/tab_photo"/>
+
+            <TextView
+                android:id="@+id/tv_tab3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="美图"
+                android:textSize="12sp"/>
+
+        </LinearLayout>
+
+
     </LinearLayout>
+
 
 </RelativeLayout>

@@ -53,6 +53,7 @@ public class OnClickInterpreter extends AnnotationInterpreter {
 				}
 
 				final Method finalDeclaredMethod = declaredMethod;
+				finalDeclaredMethod.setAccessible(true);
 				view.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {

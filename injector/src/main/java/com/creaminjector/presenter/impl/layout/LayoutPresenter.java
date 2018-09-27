@@ -62,7 +62,6 @@ public class LayoutPresenter implements ILayoutPresenter {
         }
         creater.setContext(context);
         creater.onViewCreated();
-        creater.onInitData();
         callBack.onCompleted(creater);
 
     }

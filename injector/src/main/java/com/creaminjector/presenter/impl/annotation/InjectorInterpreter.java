@@ -1,6 +1,7 @@
 package com.creaminjector.presenter.impl.annotation;
 
 import android.content.Context;
+import android.view.View;
 
 import com.creaminjector.annotation.Injector;
 import com.creaminjector.presenter.IInjectionPresenter;
@@ -19,12 +20,18 @@ public class InjectorInterpreter extends AnnotationInterpreter {
     @Override
     public void interpreter(Context context, AnnotatedElement target, InterpreterCallBack callBack, Object... args) {
         final LayoutCreater creater = (LayoutCreater) args[0];
-        final int viewID = (Integer) args[1];
+        Field field = (Field) args[1];
+        field.setAccessible(true);
         if (target.getClass() == Field.class) {
 
             final Injector injector = getAnnotation(target, Injector.class);
             Class<? extends IInjectionPresenter> value = injector.value();
-            creater.getContentView().findViewById(viewID).setTag(LayoutCreater.TAG_INJECTOR_CLASS, value);
+            try {
+                View view= (View) field.get(creater);
+                view.setTag(LayoutCreater.TAG_INJECTOR_CLASS, value);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
     }
 

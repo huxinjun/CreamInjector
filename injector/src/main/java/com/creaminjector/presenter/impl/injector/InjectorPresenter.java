@@ -23,7 +23,7 @@ public class InjectorPresenter implements IInjectionPresenter {
             else
                 injector = injectorClass.newInstance();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("无法实例化类型:" + injectorClass.getName());
         }
         injector.inject(target, value);
     }

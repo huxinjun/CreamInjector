@@ -56,6 +56,14 @@ public class SmartViewPagerSameTemplaterAdapter extends PagerAdapter {
 
     private LayoutCreater tempCreater;
 
+    private class DataWrapper {
+        private Object data;
+
+        public DataWrapper(Object o) {
+            data = o;
+        }
+    }
+
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         CreamUtils.inflate(context, mItemCreaterType, new ILayoutPresenter.InflateCallBack() {
@@ -72,13 +80,19 @@ public class SmartViewPagerSameTemplaterAdapter extends PagerAdapter {
         Object dataCount = mAdapterView.getTag(LayoutCreater.TAG_MULTI_DATA_COUNT);
         if (dataCount == null) {
             Object o = mAllDatas.get(position);
+            if (o instanceof List)
+                o = new DataWrapper(o);
             tempCreater.setContentData(o);
         } else {
             //一个布局绑定多个对象
             int count = (int) dataCount;
             List<Object> datas = new ArrayList<>();
-            for (int i = position * count; i < position * count + count; i++)
-                datas.add(mAllDatas.get(i));
+            for (int i = position * count; i < position * count + count; i++) {
+                Object o = mAllDatas.get(i);
+                if (o instanceof List)
+                    o = new DataWrapper(o);
+                datas.add(o);
+            }
             tempCreater.setContentData(datas);
         }
 

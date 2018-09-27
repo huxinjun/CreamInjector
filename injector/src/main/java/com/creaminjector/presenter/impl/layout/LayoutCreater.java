@@ -27,7 +27,7 @@ import java.util.List;
  * @LayoutDataType 只能配置在继承了LayoutCreater的类声明上, 指示这个布局关联的数据实体类型
  * @BindJsonKey 只能配置在类静态常量上, 指示这个(视图id=常量值)所关联的基本类型数据
  */
-public abstract class LayoutCreater<T> {
+public class LayoutCreater<T> {
 
     private Handler mHandler = new Handler();
     /**
@@ -147,13 +147,11 @@ public abstract class LayoutCreater<T> {
     public void onViewCreated() {
     }
 
-    public void onInitData() {
-    }
-
     /**
      * 数据注入完成
      */
-    public abstract void onDataPrepared();
+    public void onDataPrepared(){}
+
 
 
     //-----------------------------------------------------------------------
@@ -212,6 +210,7 @@ public abstract class LayoutCreater<T> {
         //视图
         View view = null;
         try {
+            viewField.setAccessible(true);
             view = (View) viewField.get(this);
         } catch (IllegalAccessException e) {
             throw new RuntimeException("无法在" + this.getClass().getName() + "中找到" + viewField.getName() + "字段");
