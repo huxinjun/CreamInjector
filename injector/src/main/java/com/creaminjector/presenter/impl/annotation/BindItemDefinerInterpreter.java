@@ -35,24 +35,6 @@ public class BindItemDefinerInterpreter extends AnnotationInterpreter {
 				//给配置了@BindLayoutCreater注解的视图中放入一些tag记录其子创建器的和其他需要的信息
 				findViewById.setTag(LayoutCreater.TAG_LAYOUT_CRETAER_PARENT, creater);
 				findViewById.setTag(LayoutCreater.TAG_DEFINER_ITEM_CLASS, definer.value());
-
-				//再给其创建请求数据的命令41
-				final View finalFindViewById = findViewById;
-                if(definer!=null && target.getAnnotation(BindFieldName.class)!=null){
-                    //如果BindLayoutCreater没有配置itemLayoutCreater.requestName()，配置了BindFieldName注解，说明需要从父LayoutCreater的数据中取数据
-					creater.addDataListener(new LayoutCreater.DataListener() {
-						@Override
-						public void onDataPrepared(Object data) {
-							BindFieldName bindFieldName=target.getAnnotation(BindFieldName.class);
-							//根据BindFieldName在父LayoutCreater关联的数据中找自己需要的字段
-							Object findObj = ReflectUtils.getValueByFieldPath(data, bindFieldName.value());
-							finalFindViewById.setTag(LayoutCreater.TAG_ITEMS_DATA, findObj);
-							//数据来了,这个可能是给listview,gridview,recycleview,viewpager使用的数据
-							CreamUtils.inject(finalFindViewById, findObj);
-						}
-					});
-                    return;
-                }
 			} catch (Exception e) {
 				//出错误说明没有配置这个注解,不用管
 				throw new RuntimeException(e);

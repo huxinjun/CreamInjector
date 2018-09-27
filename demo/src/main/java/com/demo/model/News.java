@@ -64,6 +64,7 @@ public class News {
         public String title;
         public String digest;
         public String link;
+        public List<PicInfo> picInfo;
 
         @Override
         public String toString() {
@@ -72,6 +73,18 @@ public class News {
                     ", title='" + title + '\'' +
                     ", digest='" + digest + '\'' +
                     ", link='" + link + '\'' +
+                    ", picInfo='" + picInfo + '\'' +
+                    '}';
+        }
+    }
+
+    public class PicInfo{
+        public String url;
+
+        @Override
+        public String toString() {
+            return "PicInfo{" +
+                    "url='" + url + '\'' +
                     '}';
         }
     }

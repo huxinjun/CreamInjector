@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         CreamUtils.bind(this);
-        IInjectionPresenter.DEFAULT_INJECTOR.put(ImageView.class, ImageInjector.class);
+//        IInjectionPresenter.DEFAULT_INJECTOR.put(ImageView.class, ImageInjector.class);
     }
 
     @BindView(R.layout.activity_main)

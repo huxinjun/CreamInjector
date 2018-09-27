@@ -67,23 +67,4 @@ public class LayoutPresenter implements ILayoutPresenter {
     }
 
 
-    /**
-     * 寻找指定id所在的布局创建器
-     *
-     * @param viewID 指定id(在一个view树下这个id必须是唯一的)
-     * @return 指定id对应的创建器
-     */
-    public LayoutCreater findCreaterByViewId(LayoutCreater curr, int viewID) {
-        if (curr.getParentCreater() != null)
-            return findCreaterByViewId(curr.getParentCreater(), viewID);
-        View findViewById = curr.getContentView().findViewById(viewID);
-        if (findViewById == null)
-            throw new RuntimeException("未发现id");
-        LayoutCreater targetParentCreater = (LayoutCreater) findViewById.getTag(LayoutCreater.TAG_LAYOUT_CRETAER_PARENT);
-        if (targetParentCreater == null)
-            throw new RuntimeException("未发现targetParentCreater");
-        return targetParentCreater;
-    }
-
-
 }

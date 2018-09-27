@@ -98,11 +98,6 @@ public class LayoutCreater<T> {
     public static final int TAG_RECYCLERVIEW_FOOTER_DATA = TAG_START_INDEX + 0x15;
 
     private Context mContext;
-    /**
-     * 父创建器
-     * 顶层的LayoutCreater的mParentCreater为null
-     */
-    private LayoutCreater mParentCreater;
 
     /**
      * 这个布局对应的视图对象
@@ -150,34 +145,14 @@ public class LayoutCreater<T> {
     /**
      * 数据注入完成
      */
-    public void onDataPrepared(){}
-
-
-
-    //-----------------------------------------------------------------------
-
-    public interface DataListener {
-        void onDataPrepared(Object data);
+    public void onDataPrepared() {
     }
-
-    public void addDataListener(DataListener dataListener) {
-        this.mDataListeners.add(dataListener);
-    }
-
-    /**
-     * 有些内嵌的LayoutCreater的字段可能需要父LayoutCreater中的数据，他们在解释注解的时候
-     * 会在父LayoutCreater上注册一个DataListener
-     */
-    private List<DataListener> mDataListeners = new ArrayList<>();
 
     /**
      * 此方法由命令回调反射调用
      * 目的是不想暴露给外界
      */
     private void dataPrepared() {
-        if (mDataListeners.size() > 0)
-            for (DataListener listener : mDataListeners)
-                listener.onDataPrepared(mContentData);
 
         //通知提供给外部的方法
         onDataPrepared();
@@ -232,7 +207,8 @@ public class LayoutCreater<T> {
         if (!ReflectUtils.isBasicType(data.getClass()))
             viewData = ReflectUtils.getValueByFieldPath(data, bindFieldName);
 
-        CreamUtils.inject(view, viewData);
+        if (view != null && viewData != null)
+            CreamUtils.inject(view, viewData);
     }
 
 
@@ -273,26 +249,6 @@ public class LayoutCreater<T> {
         if (rcv.getAdapter() != null)
             rcv.getAdapter().notifyDataSetChanged();
     }
-
-
-    /**
-     * 切换fragment
-     *
-     * @param viewID        fragment所在的id,不限定与当前creater
-     * @param fragmentClass fragment类
-     */
-    public void changeFragment(int viewID, Class<? extends Fragment> fragmentClass) {
-
-    }
-
-    public void changeLayoutCreater(int viewID, Class<? extends LayoutCreater> createrClass) {
-
-    }
-
-    public void changeLayoutCreaterData(int viewID, Class<? extends LayoutCreater> createrClass, String requestName) {
-
-    }
-
 
     //----------------------------------------getter and setter-----------------------------------------------------------------------------------------------------------
     public Context getContext() {
@@ -342,14 +298,6 @@ public class LayoutCreater<T> {
     public void setContentData(List<T> mContentDatas) {
         this.mContentDatas = mContentDatas;
         dataPrepared();
-    }
-
-    public LayoutCreater getParentCreater() {
-        return mParentCreater;
-    }
-
-    public void setParentCreater(LayoutCreater mParentCreater) {
-        this.mParentCreater = mParentCreater;
     }
 
     public int getInParentIndex() {

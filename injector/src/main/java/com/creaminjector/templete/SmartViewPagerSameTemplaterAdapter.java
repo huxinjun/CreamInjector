@@ -71,7 +71,6 @@ public class SmartViewPagerSameTemplaterAdapter extends PagerAdapter {
             @Override
             public void onCompleted(LayoutCreater instance) {
                 tempCreater = instance;
-                tempCreater.setParentCreater((LayoutCreater) mAdapterView.getTag(LayoutCreater.TAG_LAYOUT_CRETAER_PARENT));
                 tempCreater.getContentView().setTag(tempCreater);
             }
         });

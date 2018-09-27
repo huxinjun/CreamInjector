@@ -9,6 +9,7 @@ import com.creaminjector.annotation.creater.BindView;
 import com.creaminjector.presenter.ILayoutPresenter;
 import com.creaminjector.presenter.impl.layout.LayoutCreater;
 import com.creaminjector.utils.CreamUtils;
+import com.creaminjector.utils.ULog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,10 +71,8 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartRecyclerAdap
             Class<? extends ItemDefiner> mItemDefinerClazz = (Class<? extends ItemDefiner>) recyclerView.getTag(LayoutCreater.TAG_DEFINER_ITEM_CLASS);
             try {
                 mItemDefiner = mItemDefinerClazz.newInstance();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
             mItemDefiner.defineHeader(mHeaderCreaters);
             mItemDefiner.defineFooter(mFooterCreaters);

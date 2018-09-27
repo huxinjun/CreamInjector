@@ -6,20 +6,24 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.creaminjector.annotation.BindFieldName;
 import com.creaminjector.annotation.Injector;
+import com.creaminjector.annotation.creater.BindItemDefiner;
 import com.creaminjector.annotation.creater.BindLayoutCreater;
 import com.creaminjector.annotation.creater.BindView;
 import com.creaminjector.presenter.IInjectionPresenter;
 import com.creaminjector.presenter.impl.layout.LayoutCreater;
+import com.creaminjector.templete.SmartRecyclerAdapter;
 import com.creaminjector.utils.CreamUtils;
 import com.creaminjector.utils.ULog;
 import com.demo.R;
@@ -121,16 +125,50 @@ public class Fragment1 extends Fragment {
 
                         @Override
                         public void onError(Throwable e) {
-
+                            ULog.out("onError:"+e.getMessage());
                         }
 
                         @Override
                         public void onNext(News news) {
                             news.convertDataMapToList();
-                            setContentData(news);
                             ULog.out("data:" + news);
+                            setContentData(news);
                         }
                     });
+
+            vp_pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    tab_layout.getTabAt(position).select();
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
+
+            tab_layout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    vp_pager.setCurrentItem(tab.getPosition());
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+
+                }
+            });
 
         }
 
@@ -141,23 +179,62 @@ public class Fragment1 extends Fragment {
 
             @BindView(R.id.rcv)
             @BindFieldName("data")
-            @BindLayoutCreater(creater = NewsItemCreater.class)
+            @BindItemDefiner(PagerNewsDefiner.class)
             private RecyclerView rcv;
+
+            @Override
+            public void onViewCreated() {
+                super.onViewCreated();
+                rcv.setLayoutManager(new LinearLayoutManager(getContext()));
+            }
 
             @Override
             public void onDataPrepared() {
                 super.onDataPrepared();
-                ULog.out("");
+                ULog.out("PagerCreater.onDataPrepared");
+            }
+        }
+
+        public static class PagerNewsDefiner implements SmartRecyclerAdapter.ItemDefiner{
+
+            @Override
+            public void defineHeader(List<Class<? extends LayoutCreater>> headers) {
+
+            }
+
+            @Override
+            public void defineFooter(List<Class<? extends LayoutCreater>> footers) {
+
+            }
+
+            @Override
+            public Class<? extends LayoutCreater> defineItem(List<Object> allData, int position) {
+                return NewsItemCreater.class;
             }
         }
 
         @BindView(R.layout.item_news)
         public static class NewsItemCreater extends LayoutCreater {
 
+            @BindView(R.id.iv_pic)
+            @BindFieldName("picInfo[0].url")
+            private ImageView iv_pic;
             @BindView(R.id.tv_title)
             @BindFieldName("title")
             private TextView tv_title;
 
+            @Override
+            public void onViewCreated() {
+                super.onViewCreated();
+                ULog.out("NewsItemCreater.onViewCreated");
+            }
+
+            @Override
+            public void onDataPrepared() {
+                ULog.out("content:"+getContentData());
+                super.onDataPrepared();
+
+            }
         }
     }
 }

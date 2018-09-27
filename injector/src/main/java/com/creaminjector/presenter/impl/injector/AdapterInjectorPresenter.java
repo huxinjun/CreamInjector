@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 
+import com.creaminjector.presenter.impl.layout.LayoutCreater;
 import com.creaminjector.templete.SmartAbsListAdapter;
 
 public class AdapterInjectorPresenter extends InjectorPresenter {
@@ -15,8 +16,10 @@ public class AdapterInjectorPresenter extends InjectorPresenter {
 		AdapterView<BaseAdapter> adapterView=(AdapterView<BaseAdapter>) target;
 		if(value==null)
 			adapterView.setAdapter(null);
-		else
+		else{
+			adapterView.setTag(LayoutCreater.TAG_ITEMS_DATA,value);
 			adapterView.setAdapter(new SmartAbsListAdapter(target.getContext(),adapterView));
+		}
 	}
 
 }
