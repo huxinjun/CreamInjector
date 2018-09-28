@@ -23,10 +23,10 @@ public class News {
 
     private Map<String, String> map = new HashMap() {
         {
-            put("tech", "教育");
+            put("tech", "科技");
             put("auto", "汽车");
-            put("money", "金融");
-            put("sports", "运动");
+            put("money", "财经");
+            put("sports", "体育");
             put("dy", "科学");
             put("war", "军事");
             put("ent", "娱乐");

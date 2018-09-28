@@ -49,21 +49,10 @@ public class LayoutCreater<T> {
      * 子条目关联的LayoutCreater的Class
      */
     public static final int TAG_LAYOUT_CRETAER_ITEM_CLASS = TAG_START_INDEX + 0x3;
-
-    /**
-     * 子条目使用的数据类型(type=Class<?>)
-     */
-    public static final int TAG_ITEM_DATA_TYPE = TAG_START_INDEX + 0x5;
     /**
      * 所有子条目使用的数据(type=ArrayList<?>)
      */
     public static final int TAG_ITEMS_DATA = TAG_START_INDEX + 0x6;
-
-
-    /**
-     * 父创建器TAG
-     */
-    public static final int TAG_LAYOUT_CRETAER_PARENT = TAG_START_INDEX + 0x7;
 
     /**
      * view使用的数据注入器
@@ -96,6 +85,10 @@ public class LayoutCreater<T> {
      * RecyclerView的footer数据集合
      */
     public static final int TAG_RECYCLERVIEW_FOOTER_DATA = TAG_START_INDEX + 0x15;
+    /**
+     * VIEW绑定的creater对象
+     */
+    public static final int TAG_LAYOUT_CREATER = TAG_START_INDEX + 0x15;
 
     private Context mContext;
 
@@ -103,11 +96,6 @@ public class LayoutCreater<T> {
      * 这个布局对应的视图对象
      */
     private View mContentView;
-
-    /**
-     * 这个布局对应的数据类型
-     */
-    private Class<T> mContentDataType;
 
     /**
      * 这个布局对应的数据
@@ -133,6 +121,17 @@ public class LayoutCreater<T> {
         return (LayoutCreater) view.getTag(TAG_LAYOUT_CRETAER_HEADER);
     }
 
+
+    /**
+     * 获取一个view相关的LayoutCreater,这个view必须是CreamUtils.bind返回的
+     * @param view
+     * @return
+     */
+    public static LayoutCreater getLayoutCreater(View view) {
+        if (view == null)
+            return null;
+        return (LayoutCreater) view.getTag(LayoutCreater.TAG_LAYOUT_CREATER);
+    }
 
     //-------------------------三个生命周期方法----------------------------------------------
 
@@ -265,14 +264,6 @@ public class LayoutCreater<T> {
 
     public void setContentView(View mContentView) {
         this.mContentView = mContentView;
-    }
-
-    public Class<T> getContentDataType() {
-        return mContentDataType;
-    }
-
-    public void setContentDataType(Class<?> mContentDataType) {
-        this.mContentDataType = (Class<T>) mContentDataType;
     }
 
     public T getContentData() {

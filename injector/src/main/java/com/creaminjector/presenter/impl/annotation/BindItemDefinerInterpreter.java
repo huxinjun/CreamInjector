@@ -32,8 +32,6 @@ public class BindItemDefinerInterpreter extends AnnotationInterpreter {
 				//这个View 可能是ListView,GridView,ViewPager等
 				View findViewById = (View) field.get(creater);
 				BindItemDefiner definer = getAnnotation(target, BindItemDefiner.class);
-				//给配置了@BindLayoutCreater注解的视图中放入一些tag记录其子创建器的和其他需要的信息
-				findViewById.setTag(LayoutCreater.TAG_LAYOUT_CRETAER_PARENT, creater);
 				findViewById.setTag(LayoutCreater.TAG_DEFINER_ITEM_CLASS, definer.value());
 			} catch (Exception e) {
 				//出错误说明没有配置这个注解,不用管

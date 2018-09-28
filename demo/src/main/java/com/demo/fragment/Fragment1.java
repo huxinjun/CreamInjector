@@ -1,6 +1,7 @@
 package com.demo.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.creaminjector.annotation.BindFieldName;
 import com.creaminjector.annotation.Injector;
+import com.creaminjector.annotation.OnClick;
 import com.creaminjector.annotation.creater.BindItemDefiner;
 import com.creaminjector.annotation.creater.BindLayoutCreater;
 import com.creaminjector.annotation.creater.BindView;
@@ -27,16 +29,13 @@ import com.creaminjector.templete.SmartRecyclerAdapter;
 import com.creaminjector.utils.CreamUtils;
 import com.creaminjector.utils.ULog;
 import com.demo.R;
+import com.demo.activity.WebActivity;
 import com.demo.model.News;
 import com.demo.net.NetClient;
-import com.easyjson.annotation.JSONField;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -191,6 +190,7 @@ public class Fragment1 extends Fragment {
             @Override
             public void onDataPrepared() {
                 super.onDataPrepared();
+                getContentData();
                 ULog.out("PagerCreater.onDataPrepared");
             }
         }
@@ -214,14 +214,23 @@ public class Fragment1 extends Fragment {
         }
 
         @BindView(R.layout.item_news)
-        public static class NewsItemCreater extends LayoutCreater {
+        public static class NewsItemCreater extends LayoutCreater<News.Item> {
 
             @BindView(R.id.iv_pic)
             @BindFieldName("picInfo[0].url")
             private ImageView iv_pic;
+
             @BindView(R.id.tv_title)
             @BindFieldName("title")
             private TextView tv_title;
+
+            @BindView(R.id.tv_desc)
+            @BindFieldName("digest")
+            private TextView tv_desc;
+
+            @BindView(R.id.tv_from)
+            @BindFieldName("source")
+            private TextView tv_from;
 
             @Override
             public void onViewCreated() {
@@ -234,6 +243,13 @@ public class Fragment1 extends Fragment {
                 ULog.out("content:"+getContentData());
                 super.onDataPrepared();
 
+            }
+
+            @OnClick(viewId = R.id.rl_item)
+            private void gotoWebPage(){
+                Intent intent=new Intent(getContext(), WebActivity.class);
+                intent.putExtra("url",getContentData().link);
+                getContext().startActivity(intent);
             }
         }
     }

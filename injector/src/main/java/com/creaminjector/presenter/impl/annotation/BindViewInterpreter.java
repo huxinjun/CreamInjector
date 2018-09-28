@@ -20,6 +20,7 @@ public class BindViewInterpreter extends AnnotationInterpreter {
         if (target instanceof Class) {
             //加在类上了
             creater.setContentView(View.inflate(context, bindViewAnno.value(), null));
+            creater.getContentView().setTag(LayoutCreater.TAG_LAYOUT_CREATER, creater);
             if (callBack != null)
                 callBack.onCompleted(BindView.class);
         } else if (target instanceof Field) {
