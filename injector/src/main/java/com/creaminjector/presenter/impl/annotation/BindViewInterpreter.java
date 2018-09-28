@@ -31,7 +31,10 @@ public class BindViewInterpreter extends AnnotationInterpreter {
                 return;
             try {
                 //反射注入控件实例
-                viewField.set(creater, creater.getContentView().findViewById(bindViewAnno.value()));
+                View viewById = creater.getContentView().findViewById(bindViewAnno.value());
+                if (viewById == null)
+                    throw new RuntimeException("BinView配置的视图id在布局中找不到相应的view,请检查" + creater.getClass().getName() + "." + viewField.getName());
+                viewField.set(creater, viewById);
             } catch (IllegalAccessException e) {
                 throw new RuntimeException("申明的BinView字段类型和布局中的类型不匹配：" + creater.getClass().getName() + "." + viewField.getName());
             }

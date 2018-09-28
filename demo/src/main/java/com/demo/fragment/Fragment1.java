@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -113,7 +114,7 @@ public class Fragment1 extends Fragment {
             tab_layout.setTabMode(TabLayout.MODE_SCROLLABLE);
             setTabWidth();
 
-            NetClient.getApi().getConfig("https://www.apiopen.top/journalismApi")
+            NetClient.getApi().getNews("https://www.apiopen.top/journalismApi")
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.newThread())
                     .subscribe(new Subscriber<News>() {
@@ -124,7 +125,7 @@ public class Fragment1 extends Fragment {
 
                         @Override
                         public void onError(Throwable e) {
-                            ULog.out("onError:"+e.getMessage());
+                            ULog.out("onError:" + e.getMessage());
                         }
 
                         @Override
@@ -184,7 +185,6 @@ public class Fragment1 extends Fragment {
             @Override
             public void onViewCreated() {
                 super.onViewCreated();
-                rcv.setLayoutManager(new LinearLayoutManager(getContext()));
             }
 
             @Override
@@ -195,7 +195,7 @@ public class Fragment1 extends Fragment {
             }
         }
 
-        public static class PagerNewsDefiner implements SmartRecyclerAdapter.ItemDefiner{
+        public static class PagerNewsDefiner implements SmartRecyclerAdapter.ItemDefiner {
 
             @Override
             public void defineHeader(List<Class<? extends LayoutCreater>> headers) {
@@ -209,6 +209,9 @@ public class Fragment1 extends Fragment {
 
             @Override
             public Class<? extends LayoutCreater> defineItem(List<Object> allData, int position) {
+                News.Item item = (News.Item) allData.get(position);
+                if (TextUtils.isEmpty(item.title))
+                    return null;
                 return NewsItemCreater.class;
             }
         }
@@ -240,15 +243,15 @@ public class Fragment1 extends Fragment {
 
             @Override
             public void onDataPrepared() {
-                ULog.out("content:"+getContentData());
+                ULog.out("content:" + getContentData());
                 super.onDataPrepared();
 
             }
 
             @OnClick(viewId = R.id.rl_item)
-            private void gotoWebPage(){
-                Intent intent=new Intent(getContext(), WebActivity.class);
-                intent.putExtra("url",getContentData().link);
+            private void gotoWebPage() {
+                Intent intent = new Intent(getContext(), WebActivity.class);
+                intent.putExtra("url", getContentData().link);
                 getContext().startActivity(intent);
             }
         }

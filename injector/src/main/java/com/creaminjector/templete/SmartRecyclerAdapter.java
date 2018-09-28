@@ -2,6 +2,8 @@ package com.creaminjector.templete;
 
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.RecyclerView;
 
@@ -23,9 +25,9 @@ import java.util.List;
 
 public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartRecyclerAdapter.ViewHolder> {
 
-    public static final int ITEM_VIEW_TYPE_HEADER=0;
-    public static final int ITEM_VIEW_TYPE_ITEM=1;
-    public static final int ITEM_VIEW_TYPE_FOOTER=2;
+    public static final int ITEM_VIEW_TYPE_HEADER = 0;
+    public static final int ITEM_VIEW_TYPE_ITEM = 1;
+    public static final int ITEM_VIEW_TYPE_FOOTER = 2;
 
     /**
      * 这个Adapter被附加的适配器视图
@@ -85,16 +87,18 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartRecyclerAdap
      * 处理gridview的header，footer不是占一整行的问题
      */
     private void initLayoutManager() {
+        if (mRecyclerView.getLayoutManager() == null)
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
-        if(layoutManager!=null){
-            if(layoutManager instanceof GridLayoutManager){
+        if (layoutManager != null) {
+            if (layoutManager instanceof GridLayoutManager) {
                 //处理gridview的header，footer不是占一整行的问题
-                GridLayoutManager gridLayoutManager= (GridLayoutManager) layoutManager;
+                GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
                 int spanCount = gridLayoutManager.getSpanCount();
                 gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                     @Override
                     public int getSpanSize(int position) {
-                        if(position<mHeaderCreaters.size() || position>=mHeaderCreaters.size()+mAllDatas.size())
+                        if (position < mHeaderCreaters.size() || position >= mHeaderCreaters.size() + mAllDatas.size())
                             return spanCount;
                         else
                             return 1;
@@ -106,12 +110,18 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartRecyclerAdap
 
     //临时使用
     LayoutCreater tempCreater;
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == -999) {
+            NullLayoutCreater nullLayoutCreater = new NullLayoutCreater();
+            nullLayoutCreater.setContentView(new View(mContext));
+            return new ViewHolder(nullLayoutCreater);
+        }
         //根据类声明中的注解创建相应的LayoutCreater
         Class<? extends LayoutCreater> createrClass = viewTypes.get(viewType);
         try {
-            CreamUtils.inflate(mContext,createrClass, new ILayoutPresenter.InflateCallBack() {
+            CreamUtils.inflate(mContext, createrClass, new ILayoutPresenter.InflateCallBack() {
                 @Override
                 public void onCompleted(LayoutCreater instance) {
                     tempCreater = instance;
@@ -125,22 +135,20 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartRecyclerAdap
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        if(isHeader(position)){
+        if (isHeader(position)) {
             Object tag = mRecyclerView.getTag(LayoutCreater.TAG_RECYCLERVIEW_HEADER_DATA);
-            if(tag!=null){
-                List datas= (List) tag;
+            if (tag != null) {
+                List datas = (List) tag;
                 holder.creater.setContentData(datas.get(position));
             }
-        }
-        else if(isFooter(position)){
+        } else if (isFooter(position)) {
             Object tag = mRecyclerView.getTag(LayoutCreater.TAG_RECYCLERVIEW_FOOTER_DATA);
-            if(tag!=null){
-                List datas= (List) tag;
-                holder.creater.setContentData(datas.get(position-(mHeaderCreaters.size()+mAllDatas.size())));
+            if (tag != null) {
+                List datas = (List) tag;
+                holder.creater.setContentData(datas.get(position - (mHeaderCreaters.size() + mAllDatas.size())));
             }
-        }
-        else
-            holder.creater.setContentData(mAllDatas.get(position-mHeaderCreaters.size()));
+        } else
+            holder.creater.setContentData(mAllDatas.get(position - mHeaderCreaters.size()));
     }
 
     @Override
@@ -150,18 +158,26 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartRecyclerAdap
 
     @Override
     public int getItemViewType(int position) {
-        Class<? extends LayoutCreater> createrClass=null;
-        if(isHeader(position))
+        Class<? extends LayoutCreater> createrClass = null;
+        if (isHeader(position))
             createrClass = mHeaderCreaters.get(position);
-        else if(isFooter(position))
-            createrClass = mFooterCreaters.get(position-(mHeaderCreaters.size()+mAllDatas.size()));
+        else if (isFooter(position))
+            createrClass = mFooterCreaters.get(position - (mHeaderCreaters.size() + mAllDatas.size()));
         else
             createrClass = mItemDefiner.defineItem(mAllDatas, position);
+        if (createrClass == null) {
+            return -999;
+        }
+
         BindView annotation = createrClass.getAnnotation(BindView.class);
         if (annotation == null)
             throw new RuntimeException("请在LayoutCreater[" + createrClass.getName() + "]类上添加BindView用来指定布局");
         viewTypes.put(annotation.value(), createrClass);
         return annotation.value();
+    }
+
+
+    private class NullLayoutCreater extends LayoutCreater {
     }
 
 
@@ -176,7 +192,7 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartRecyclerAdap
      * 判断某个item是否是footer
      */
     public boolean isFooter(int position) {
-        return position >= getItemCount()- mFooterCreaters.size();
+        return position >= getItemCount() - mFooterCreaters.size();
     }
 
 

@@ -11,8 +11,8 @@ public class ImageInjectorPresenter extends InjectorPresenter {
 
     @Override
     public void inject(View target, Object value) {
-        Picasso.with(target.getContext()).load(value.toString()).into((ImageView) target);
-//		Glide.with(target.getContext()).load(value).into((ImageView) target);
+//        Picasso.with(target.getContext()).load(value.toString()).into((ImageView) target);
+		Glide.with(target.getContext()).load(value).into((ImageView) target);
     }
 
 }

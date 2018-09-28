@@ -1,5 +1,6 @@
 package com.demo.net;
 
+import com.demo.model.Duanzi;
 import com.demo.model.News;
 
 import retrofit2.http.POST;
@@ -14,6 +15,8 @@ import rx.Observable;
 public interface API {
 
     @POST
-    Observable<News> getConfig(@Url String url);
+    Observable<News> getNews(@Url String url);
 
+    @POST
+    Observable<Duanzi> getDuanzi(@Url String url);
 }
