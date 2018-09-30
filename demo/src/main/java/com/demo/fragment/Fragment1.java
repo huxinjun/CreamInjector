@@ -33,6 +33,7 @@ import com.demo.R;
 import com.demo.activity.WebActivity;
 import com.demo.model.News;
 import com.demo.net.NetClient;
+import com.demo.utils.DisplayUtil;
 
 import java.lang.reflect.Field;
 import java.util.Iterator;
@@ -92,13 +93,10 @@ public class Fragment1 extends Fragment {
         }
 
         private void setTabWidth() {
-            DisplayMetrics mDisplayMetrics = new DisplayMetrics();
-            WindowManager mWindowManager = ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE));
-            mWindowManager.getDefaultDisplay().getMetrics(mDisplayMetrics);
             try {
                 Field mRequestedTabMinWidth = TabLayout.class.getDeclaredField("mRequestedTabMinWidth");
                 mRequestedTabMinWidth.setAccessible(true);
-                mRequestedTabMinWidth.set(tab_layout, (int) (mDisplayMetrics.widthPixels / 4));
+                mRequestedTabMinWidth.set(tab_layout, (int) (DisplayUtil.getScreenWidth(getContext()) / 4));
                 tab_layout.invalidate();
             } catch (NoSuchFieldException e) {
                 e.printStackTrace();

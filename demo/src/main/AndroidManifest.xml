@@ -22,6 +22,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.WebActivity"/>
+
+        <service
+            android:name=".fragment.Fragment2$PlayerService"
+            android:exported="false" />
     </application>
 
 </manifest>

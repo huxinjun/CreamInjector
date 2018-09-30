@@ -1,6 +1,7 @@
 package com.demo.net;
 
 import com.demo.model.Duanzi;
+import com.demo.model.ImageList;
 import com.demo.model.News;
 
 import retrofit2.http.POST;
@@ -19,4 +20,7 @@ public interface API {
 
     @POST
     Observable<Duanzi> getDuanzi(@Url String url);
+
+    @POST
+    Observable<ImageList> getImageList(@Url String url);
 }
